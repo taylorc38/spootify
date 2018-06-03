@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import cunningham.taylor.spootify.application.Injector
 import cunningham.taylor.spootify.player.AudioPlayer
 import cunningham.taylor.spootify.player.Track
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,8 +24,8 @@ class MainActivity : AppCompatActivity() {
     private val playStateListener: AudioPlayer.PlayStateListener = (object : AudioPlayer.PlayStateListener {
         override fun onPlayStateChanged(playState: AudioPlayer.PlayState) {
             when (playState) {
-                AudioPlayer.PlayState.PLAYING -> btnPlay.setImageDrawable(applicationContext.getDrawable(android.R.drawable.ic_media_pause))
-                else -> btnPlay.setImageDrawable(applicationContext.getDrawable(android.R.drawable.ic_media_play))
+                AudioPlayer.PlayState.PLAYING -> Injector.get().picasso().load(android.R.drawable.ic_media_pause).into(btnPlay)
+                else -> Injector.get().picasso().load(android.R.drawable.ic_media_play).into(btnPlay)
             }
         }
     })
@@ -41,6 +42,9 @@ class MainActivity : AppCompatActivity() {
             // Add a song
             musicService?.audioPlayer?.playlist?.add(
                     Track("Redbone", R.raw.redbone)
+            )
+            musicService?.audioPlayer?.playlist?.add(
+                    Track("Let's Get Scwhify", R.raw.schwifty)
             )
         }
 
@@ -73,14 +77,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnPrevious.setOnClickListener {
-            musicService?.audioPlayer?.rewind(15000)
+            musicService?.audioPlayer?.previous()
         }
 
         btnNext.setOnClickListener {
-            musicService?.audioPlayer?.ff(15000)
+            musicService?.audioPlayer?.next()
         }
 
-        // TODO add previous and next
+        btnRewind.setOnClickListener {
+            musicService?.audioPlayer?.rewind(15000)
+        }
+
+        btnFf.setOnClickListener {
+            musicService?.audioPlayer?.ff(15000)
+        }
     }
 
     override fun onDestroy() {
