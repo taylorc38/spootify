@@ -7,9 +7,8 @@ import android.content.ServiceConnection
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import cunningham.taylor.spootify.player.AudioPlayer
-import cunningham.taylor.spootify.player.local.LocalTrack
+import cunningham.taylor.spootify.player.Track
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     private val serviceConnection = (object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName?, service: IBinder?) {
-            Log.d(TAG, "Service connected")
             val binder = service as MusicService.MusicServiceBinder
             musicService = binder.getService()
             musicBound = true
@@ -42,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
             // Add a song
             musicService?.audioPlayer?.playlist?.add(
-                    LocalTrack("Redbone", R.raw.redbone)
+                    Track("Redbone", R.raw.redbone)
             )
         }
 

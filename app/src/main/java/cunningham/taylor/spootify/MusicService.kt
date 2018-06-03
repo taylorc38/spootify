@@ -6,12 +6,11 @@ import android.os.Binder
 import android.os.IBinder
 import cunningham.taylor.spootify.player.AudioPlayer
 import cunningham.taylor.spootify.player.local.LocalAudioPlayer
-import cunningham.taylor.spootify.player.local.LocalTrack
 
 class MusicService : Service() {
 
     private val musicBind: IBinder = MusicServiceBinder()
-    var audioPlayer: AudioPlayer<LocalTrack>? = null
+    lateinit var audioPlayer: AudioPlayer
 
     override fun onCreate() {
         super.onCreate()

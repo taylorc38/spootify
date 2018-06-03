@@ -7,14 +7,14 @@ import android.media.MediaPlayer
 import android.os.PowerManager
 import android.util.Log
 import cunningham.taylor.spootify.player.AudioPlayer
+import cunningham.taylor.spootify.player.Track
 
 class LocalAudioPlayer(private val applicationContext: Context)
-    : AudioPlayer<LocalTrack>(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
+    : AudioPlayer(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
     override var shuffle = true // TODO implement shuffle
     override var autoPlay = true
-    override val playlist = ArrayList<LocalTrack>()
-    override var currentTrack: LocalTrack? = null
+    override var currentTrack: Track? = null
         private set
     private var currentIndex = 0
         private set(value) {
@@ -45,8 +45,8 @@ class LocalAudioPlayer(private val applicationContext: Context)
     override fun playAtIndex(index: Int) {
         player.reset()
         currentIndex = index
-        if (currentTrack != null) {
-            val assetFileDescriptor: AssetFileDescriptor? = applicationContext.resources.openRawResourceFd(currentTrack!!.rawId)
+        if (currentTrack != null && currentTrack?.rawId != null) {
+            val assetFileDescriptor: AssetFileDescriptor? = applicationContext.resources.openRawResourceFd(currentTrack!!.rawId!!)
             if (assetFileDescriptor != null) {
                 player.setDataSource(assetFileDescriptor.fileDescriptor,
                         assetFileDescriptor.startOffset,
@@ -146,7 +146,6 @@ class LocalAudioPlayer(private val applicationContext: Context)
     }
 
     override fun onSeekComplete(mp: MediaPlayer?) {
-        Log.d(TAG, "cached = ${seekCachedPlayState?.name}")
         if (seekCachedPlayState == PlayState.PLAYING) {
             resume()
         } else {

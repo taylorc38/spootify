@@ -2,12 +2,12 @@ package cunningham.taylor.spootify.player
 
 import kotlin.properties.Delegates
 
-abstract class AudioPlayer<Track> {
+abstract class AudioPlayer {
 
     abstract var shuffle: Boolean
     abstract var autoPlay: Boolean
-    abstract val playlist: ArrayList<Track>
     abstract val currentTrack: Track?
+    val playlist: ArrayList<Track> = ArrayList()
     private val listeners: ArrayList<PlayStateListener> = ArrayList()
     var playState: PlayState by Delegates.observable(
             initialValue = PlayState.UNINITIALIZED,
