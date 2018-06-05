@@ -12,13 +12,14 @@ import cunningham.taylor.spootify.player.Track
 class LocalAudioPlayer(private val applicationContext: Context)
     : AudioPlayer(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
-    override var shuffle = true // TODO implement shuffle
+    override var shuffle = false // TODO implement shuffle
     override var autoPlay = true
     override var currentTrack: Track? = null
         private set
     private var currentIndex = 0
         private set(value) {
             try {
+                field = value
                 currentTrack = playlist[value]
             } catch (e: IndexOutOfBoundsException) {
                 Log.e(TAG, e.message)
@@ -67,12 +68,14 @@ class LocalAudioPlayer(private val applicationContext: Context)
         } else {
             currentIndex = 0
             playState = PlayState.COMPLETE
+            player.release()
         }
     }
 
     override fun previous() {
         if (currentIndex > 0
-                && (player.isPlaying && player.currentPosition < REPLAY_THRESHOLD_MILLISEC)) {
+                && player.isPlaying
+                && player.currentPosition < REPLAY_THRESHOLD_MILLISEC) {
             playAtIndex(currentIndex - 1)
         } else {
             playAtIndex(currentIndex)
