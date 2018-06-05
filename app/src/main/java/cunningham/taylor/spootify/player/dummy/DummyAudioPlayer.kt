@@ -10,9 +10,18 @@ class DummyAudioPlayer : AudioPlayer() {
     override var shuffle = false
     override var autoPlay = true
     override var currentTrack: Track? = null
-    var currentIndex: Int = 0
-    private val playlistSize: Int = PLAYLIST_SIZE
+        private set
+    private var currentIndex: Int = 0
+        private set(value) {
+            try {
+                field = value
+                currentTrack = playlist[value]
+            } catch (e: IndexOutOfBoundsException) {
+                Log.e(TAG, e.message)
+            }
+        }
     private val mediaCompletedHandler = Handler()
+
     private val mediaCompletedRunnable = Runnable {
         Log.i(TAG, "Media complete")
         if (autoPlay) {
@@ -21,15 +30,16 @@ class DummyAudioPlayer : AudioPlayer() {
     }
 
     override fun playAtIndex(index: Int) {
-        Log.i(TAG, "Playing")
+        Log.i(TAG, "playAtIndex($index)")
         playState = PlayState.UNINITIALIZED
         currentIndex = index
         playState = PlayState.PLAYING
+        mediaCompletedHandler.postDelayed(mediaCompletedRunnable, TRACK_DURATION)
     }
 
     override fun next() {
         Log.i(TAG, "next()")
-        if (currentIndex < playlistSize - 1) {
+        if (currentIndex < playlist.size - 1) {
             playAtIndex(currentIndex++)
         } else {
             currentIndex = 0
@@ -58,13 +68,13 @@ class DummyAudioPlayer : AudioPlayer() {
 
     override fun rewind(milliseconds: Int) {
         Log.i(TAG, "rewind()")
-        var seekCachedPlayState = playState
+        val seekCachedPlayState = playState
         playState = PlayState.SEEKING
         playState = seekCachedPlayState
     }
 
     override fun ff(milliseconds: Int) {
-        var seekCachedPlayState = playState
+        val seekCachedPlayState = playState
         playState = PlayState.SEEKING
         playState = seekCachedPlayState
     }
@@ -75,6 +85,6 @@ class DummyAudioPlayer : AudioPlayer() {
 
     companion object {
         const val TAG = "DummyAudioPlayer"
-        const val PLAYLIST_SIZE = 6
+        const val TRACK_DURATION: Long = 10000 // 10 seconds
     }
 }
