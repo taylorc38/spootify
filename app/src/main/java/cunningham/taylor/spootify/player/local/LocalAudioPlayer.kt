@@ -9,6 +9,9 @@ import android.util.Log
 import cunningham.taylor.spootify.player.AudioPlayer
 import cunningham.taylor.spootify.player.Track
 
+/**
+ * Implementation of [AudioPlayer] that uses [Track.rawId] to play audio files.
+ */
 class LocalAudioPlayer(private val applicationContext: Context)
     : AudioPlayer(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 

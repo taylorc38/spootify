@@ -5,6 +5,9 @@ import android.util.Log
 import cunningham.taylor.spootify.player.AudioPlayer
 import cunningham.taylor.spootify.player.Track
 
+/**
+ * AudioPlayer implementation that logs methods and maintains valid playState.
+ */
 class DummyAudioPlayer : AudioPlayer() {
 
     override var shuffle = false

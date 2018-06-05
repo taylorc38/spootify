@@ -2,6 +2,9 @@ package cunningham.taylor.spootify.player
 
 import kotlin.properties.Delegates
 
+/**
+ * Provides an interface for audio playback.
+ */
 abstract class AudioPlayer {
 
     abstract var shuffle: Boolean
