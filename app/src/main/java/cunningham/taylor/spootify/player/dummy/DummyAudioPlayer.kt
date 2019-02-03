@@ -4,11 +4,12 @@ import android.os.Handler
 import android.util.Log
 import cunningham.taylor.spootify.player.AudioPlayer
 import cunningham.taylor.spootify.player.Track
+import javax.inject.Inject
 
 /**
  * AudioPlayer implementation that logs methods and maintains valid playState.
  */
-class DummyAudioPlayer : AudioPlayer() {
+class DummyAudioPlayer @Inject constructor(): AudioPlayer() {
 
     override var shuffle = false
     override var autoPlay = true
